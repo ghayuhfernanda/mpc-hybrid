@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+
+  node-a:
+    build: ./mpc-node
+    container_name: node-a
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+
+  node-b:
+    build: ./mpc-node
+    container_name: node-b
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+
+  node-c:
+    build: ./mpc-node
+    container_name: node-c
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+
+  coordinator:
+    build: ./coordinator
+    container_name: coordinator
+    ports:
+      - "5000:5000"
+    environment:
+      - NODES=http://node-a:8001,http://node-b:8002,http://node-c:8003
+    depends_on:
+      - node-a
+      - node-b
+      - node-c
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - REACT_APP_API=http://localhost:5000
+    depends_on:
+      - coordinator
