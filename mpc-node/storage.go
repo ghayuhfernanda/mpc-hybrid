@@ -1,15 +1,16 @@
 package main
 
 import (
-	"os"
+    "encoding/json"
+    "os"
 )
 
-// SaveShare saves a node share
-func SaveShare(data []byte) error {
-	return os.WriteFile("share.json", data, 0600)
+func SavePartyData(filename string, data interface{}) error {
+    out, _ := json.Marshal(data)
+    return os.WriteFile(filename, out, 0600)
 }
 
-// LoadShare loads a node share
-func LoadShare() ([]byte, error) {
-	return os.ReadFile("share.json")
+func LoadPartyData(filename string, v interface{}) error {
+    raw, _ := os.ReadFile(filename)
+    return json.Unmarshal(raw, v)
 }

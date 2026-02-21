@@ -35,7 +35,9 @@ app.post("/sign", async (req, res) => {
     axios.post(nodes[1] + "/sign", { message })
   ]);
 
-  res.json({ signature: sigs[0].data });
+  const combined = combinedSignatures(sigs[0].data, sigs[1].data);
+
+  res.json({ signature: combined });
 });
 
 app.listen(5000, () =>
